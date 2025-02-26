@@ -26,30 +26,32 @@ public class FlutterGeniusScanPlugin implements FlutterPlugin, MethodCallHandler
   private Activity activity;
   private Result scanWithConfigurationResult;
 
-  @Deprecated
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterGeniusScanPlugin plugin = new FlutterGeniusScanPlugin();
-    plugin.channel = new MethodChannel(registrar.messenger(), "flutter_genius_scan");
-    plugin.activity = registrar.activity();
-    plugin.channel.setMethodCallHandler(plugin);
-    registrar.addActivityResultListener(plugin);
-  }
+  // @Deprecated
+  // public static void registerWith(PluginRegistry.Registrar registrar) {
+  //   FlutterGeniusScanPlugin plugin = new FlutterGeniusScanPlugin();
+  //   plugin.channel = new MethodChannel(registrar.messenger(), "flutter_genius_scan");
+  //   plugin.activity = registrar.activity();
+  //   plugin.channel.setMethodCallHandler(plugin);
+  //   registrar.addActivityResultListener(plugin);
+  // }
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     flutterPluginBinding = binding;
+    channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_genius_scan");
+    channel.setMethodCallHandler(this);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    channel = null;
     flutterPluginBinding = null;
   }
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
-    final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_genius_scan");
     activity = binding.getActivity();
-    channel.setMethodCallHandler(this);
     binding.addActivityResultListener(this);
   }
 

@@ -44,8 +44,10 @@ public class FlutterGeniusScanPlugin implements FlutterPlugin, MethodCallHandler
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    channel = null;
+    if (channel != null) {
+       channel.setMethodCallHandler(null);
+       channel = null;
+    }
     flutterPluginBinding = null;
   }
 
